@@ -3,31 +3,47 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
 
 namespace CountingMolecules
 {
-    class Program
+    class Solution 
     {
-        static void Main(string[] args)
+        static void Main(String[] args) 
         {
             string input = Console.ReadLine();
-            string[] values = input.Split(' ');
-            Console.WriteLine(Test(double.Parse(values[0]), double.Parse(values[1]), double.Parse(values[2])));
+            string[] atoms = input.Split(' ');
+            
+            double carbon = 0, hydrogen = 0, ocygen = 0;
+            carbon = double.Parse(atoms[0]);
+            hydrogen = double.Parse(atoms[1]);
+            ocygen = double.Parse(atoms[2]);
+            
+            string result = CountMolecules(carbon, hydrogen, ocygen);
+            
+            Console.WriteLine(result);
+
         }
-
-        public static string Test(double C, double H, double O)
+        
+        public static string CountMolecules(double carbon, double hydrogen, double ocygen)
         {
-            double water = 0, carbon = 0, glucose = 0;
-
-            carbon = ((2 * O) - H) / 4;
-            glucose = (C - (((2 * O) - H) / 4)) / 6;
-            water = O - C - ((2 * O) - H) / 4;
-
-            if(water == (long)water && glucose == (long)glucose && carbon == (long)carbon)
+            double water = 0, carbon_dioxide = 0, glucose = 0;
+            
+            //x=water, y=carbon_dioxide, z=glucose
+            //y+6x=c
+            //x+6z=h/2
+            //x+2y+6z=0, solving matrix with 3 parameters
+            carbon_dioxide = (2*ocygen - hydrogen) / 4;
+            glucose = (carbon - carbon_dioxide) / 6;
+            water = (hydrogen - 2*carbon + 2*carbon_dioxide) / 2;
+            
+            //need to check if any of the molecules doesnt exists
+            if(carbon_dioxide == (long)carbon_dioxide && glucose == (long)glucose && water == (long)water)
             {
-                return $"{water} {carbon} {glucose}";
+                string result = water.ToString() + ' ' + carbon_dioxide.ToString()  + ' ' + glucose.ToString();
+                return result;
             }
-
+            
             return "Error";
         }
     }
