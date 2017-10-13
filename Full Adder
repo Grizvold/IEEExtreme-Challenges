@@ -1,0 +1,87 @@
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Full_Adder
+{
+    class Solution 
+    {
+        
+        static void Main(String[] args)
+        {
+            //b size 2<->62 = 63, need 2 dictionaries 1 for "base" and second for calculations
+            Dictionary<int, char> BaseIntToChar = new Dictionary<int, char>(63);
+            Dictionary<char, int> BaseCharToInt = new Dictionary<char, int>(63);
+            string b_line = Console.ReadLine();
+            string firstItem = Console.ReadLine();
+            string secondItem = Console.ReadLine();
+            //remove the "+" from the input
+            string secondItem_no_plus = secondItem.Replace("+", "");
+            
+            string minuses = Console.ReadLine();
+            string questionMarks = Console.ReadLine();
+            
+            //getting size of our base and putting values in dictionaries
+            string[] b_line_values = b_line.Split(' ');
+            int base_Size = int.Parse(b_line_values[0]);
+            char[] base_List = b_line_values[1].ToCharArray();
+            
+            for (int i = 0; i < base_Size; i++ )
+            {
+                BaseIntToChar.Add(i, base_List[i]);
+                BaseCharToInt.Add(base_List[i], i);
+            }
+            
+            //remove all the white spaces from strings and send them to the adder
+            string added_Value = Adder(firstItem.Trim(),
+                                       secondItem_no_plus.Trim(),
+                                       base_Size, BaseIntToChar,
+                                       BaseCharToInt);
+            //output
+            Console.WriteLine(b_line);
+            Console.WriteLine(firstItem);
+            Console.WriteLine(secondItem);
+            Console.WriteLine(minuses);
+            Console.WriteLine(added_Value);
+        }
+        
+        static string Adder(string firstItem, 
+                            string secondItem,
+                            int base_Size,
+                            Dictionary<int, char> BaseIntToChar,
+                            Dictionary<char, int> BaseCharToInt)
+        {
+            int carry = 0;
+            //need to run on the string from right to left for the size of the longest string
+            int max_string_size = Math.Max(firstItem.Length, secondItem.Length);
+            //need to get strings to the same sizes, but if they have different sizes 
+            //we need put '0' values before the actual value starts
+            //and the '0' value is the first item in the dictionary
+            char the_0_value = BaseIntToChar[0];
+            firstItem = firstItem.PadLeft(max_string_size, the_0_value);
+            secondItem = secondItem.PadLeft(max_string_size, the_0_value);
+            string result = " ";
+            
+            for(int i = firstItem.Length - 1; i >= 0; i--)
+            {
+                int c = BaseCharToInt[firstItem[i]] + BaseCharToInt[secondItem[i]] +  carry;  
+                
+                if(c >= base_Size)
+                {
+                    carry = 1;
+                }
+                else
+                    carry = 0;
+                
+                result = result + BaseIntToChar[c % base_Size];
+            }
+            
+            char[] charResult = result.ToCharArray();
+            Array.Reverse(charResult);
+            string answer=new string(charResult);
+            return " " + answer;
+        }
+    }
+}
