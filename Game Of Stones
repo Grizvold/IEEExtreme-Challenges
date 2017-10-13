@@ -4,52 +4,49 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GameOfStones
+namespace Game_of_Stones
 {
-    class Program
+    class Solution 
     {
-        public static string Alice = "Alice";
-        public static string Bob = "Bob";
-
-        static void Main(string[] args)
+        static void Main(String[] args)
         {
-            var tests = long.Parse(Console.ReadLine());
-            var answers = new List<string>(100);
-
-            for (int i = 0; i < tests; i++)
+            
+            var num_of_tests = int.Parse(Console.ReadLine());
+            List<string> results = new List<string>(10);
+            
+            //each test case opens num of multiple games
+            for(int i = 0; i < num_of_tests; i++)
             {
-                answers.Add(SingleTest());
-            }
-
-            foreach (var answer in answers)
-            {
-                Console.WriteLine(answer);
-            }
-        }
-
-        public static string SingleTest()
-        {
-            long amountOfGames = long.Parse(Console.ReadLine());
-            long amountOfSplitPossible = 0;
-
-            for (int i = 0; i < amountOfGames; i++)
-            {
-                long amountOfPiles = long.Parse(Console.ReadLine());
-                string inputAmountInPiles = Console.ReadLine();
-                string[] values = inputAmountInPiles.Split(' ');
-
-                for (int j = 0; j < amountOfPiles; j++)
+                int num_of_games = int.Parse(Console.ReadLine());
+                int splits_of_spesific_game = 0;
+                
+                //each of the games has its own piles and stones amount
+                for(int j = 0; j < num_of_games; j++)
                 {
-                    amountOfSplitPossible += long.Parse(values[j]) / 2;
+                    int num_of_piles = int.Parse(Console.ReadLine());
+                    string stones_input = Console.ReadLine();
+                    string[] stones_in_each_pile = stones_input.Split(' ');
+                    
+                    //for each of the piles need to check for splits if possible
+                    for(int k = 0; k < num_of_piles; k++)
+                    {
+                        splits_of_spesific_game += int.Parse(stones_in_each_pile[k]) / 2;
+                    }
                 }
+                //game result based on splits
+                if(splits_of_spesific_game % 2 ==0)
+                {
+                    results.Add("Bob");
+                }
+                else
+                    results.Add("Alice");
             }
-
-            if (amountOfSplitPossible % 2 == 0)
+            
+            //output of the results
+            foreach(string result in results)
             {
-                return Bob;
+                Console.WriteLine(result);
             }
-
-            return Alice;
         }
     }
 }
