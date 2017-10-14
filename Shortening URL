@@ -34,7 +34,7 @@ namespace Shortening_in_the_Real_World
             while (n > 0)
             {
             ulong temp = n % basis;
-            ret = alphabet[(int)temp] + ret;
+            ret = alphabet[(int)temp] + ret; 
             n = (n / basis);     
             }
             return ret;
