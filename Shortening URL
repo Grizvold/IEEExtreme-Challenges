@@ -1,0 +1,57 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Shortening_in_the_Real_World
+{
+    class Solution 
+    {
+        static void Main(string[] args)
+        {
+            string baseURL = Console.ReadLine();
+            int numberOfLinks = int.Parse(Console.ReadLine());
+
+            for (int i = 0; i < numberOfLinks; i++)
+            {
+                string streamerURL = Console.ReadLine();
+                List<byte> baseListByteURL = new List<byte>(Encoding.Default.GetBytes(baseURL));
+                List<byte> streamerListByteURL = new List<byte>(Encoding.Default.GetBytes(streamerURL));
+                UInt64 num = SoloRun(baseListByteURL, streamerListByteURL);
+                string encodedURL = ToBase62(num);
+                Console.WriteLine(baseURL + "/" + encodedURL);
+            }
+        }
+        
+        private static string ToBase62(ulong number)
+        {
+            var alphabet = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            var n = number;
+            ulong basis = 62;
+            var ret = "";
+            while (n > 0)
+            {
+            ulong temp = n % basis;
+            ret = alphabet[(int)temp] + ret;
+            n = (n / basis);     
+            }
+            return ret;
+        }
+        
+        private static UInt64 SoloRun(List<byte> baseUrlBt, List<byte> streamerUrlBt)
+        {
+            List<byte> xorList = new List<byte>(baseUrlBt.Count);
+            for(int i = 0; i < streamerUrlBt.Count; i++)
+            {
+                var xorResult = baseUrlBt[i % baseUrlBt.Count] ^ streamerUrlBt[i];
+                xorList.Add((byte)xorResult);
+            }
+            
+            xorList.Reverse();
+            
+            return BitConverter.ToUInt64(xorList.ToArray<byte>(), 0 );
+        }
+    }
+}
