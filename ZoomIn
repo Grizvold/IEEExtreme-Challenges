@@ -1,0 +1,64 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+
+namespace Zoom_In
+{
+    class Solution 
+    {
+        private static Dictionary<char, Dictionary<int, string>> charDic;
+        private static int rows;
+        private static int col;
+        
+        static void Main(string[] args)
+        {
+            rows = int.Parse(Console.ReadLine());
+            col = int.Parse(Console.ReadLine());
+            int len = int.Parse(Console.ReadLine());
+            charDic = new Dictionary<char, Dictionary<int, string>>(len);
+           
+            for(int i = 0; i < len; i++)
+            {
+                var charToConvert = char.Parse(Console.ReadLine());
+                charDic.Add(charToConvert, new Dictionary<int, string>(rows));
+                
+                for(int j = 0; j < rows; j++)
+                {
+                    charDic[charToConvert].Add(j, Console.ReadLine());
+                }
+            }
+            
+            int num_rows = int.Parse(Console.ReadLine());
+            for (int z = 0; z < num_rows; z++)
+            {
+                Console.WriteLine(ZoomI(Console.ReadLine()));
+            }
+        }
+        
+        static string ZoomI(string outputLine)
+        {
+            int rowSize = rows;
+            StringBuilder output = new StringBuilder();
+            char[] outputChars = outputLine.ToCharArray();
+            int i = 0, j = 0;
+            
+            for(i = 0; i < rows; i++)
+            {
+                for(j = 0; j < outputChars.Length; j++)
+                {
+                    output.Append(charDic[outputChars[j]][i]);
+                }
+                
+                if(i != rowSize - 1)
+                {
+                    output.Append(Environment.NewLine);
+                }
+            }
+            
+            return output.ToString();
+        }
+    }
+}
