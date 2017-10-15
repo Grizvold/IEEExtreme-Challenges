@@ -1,0 +1,108 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Light_Gremlins
+{
+    class Solution
+    {
+        
+        private static long[] parts = new long [24];
+        
+        static void Main(String[] args)
+        {
+            int tests = int.Parse(Console.ReadLine());
+            long[] switchesON = new long[tests];
+            StringBuilder result = new StringBuilder();
+            
+            parts[0] = 1;
+            for(int i = 1; i < 24; i++)
+            {
+                parts[i] = parts[i - 1] * 2;   
+            } 
+            
+            for(int i = 0; i < tests; i++)
+            {
+                switchesON[i] = SignleSwitchCheck();
+                if(i + 1 < tests)
+                     {
+                    result.Append(switchesON[i].ToString());
+                    result.Append(Environment.NewLine);
+                    }
+                else
+                {
+                    result.Append(switchesON[i].ToString());
+                }
+            }
+            
+            Console.WriteLine(result);
+        }
+        
+        private static long SignleSwitchCheck()
+        {
+            long swtichesOn = 0;
+            int lightOn = -1;
+            ulong condition = 1;
+            long coeff = 0;
+            string switches_gremlins_lights = Console.ReadLine();
+            var input_values = switches_gremlins_lights.Split(' ');
+            ulong swtich_amount = ulong.Parse(input_values[0]);
+            ulong[] gremlins = new ulong[ulong.Parse(input_values[1])];
+            long pow = (long)Math.Pow(2, gremlins.Length);
+            ulong minValue = (ulong)Math.Pow(10, 9);
+            
+            //next input is the chosen prime lights to be turned ON
+            for(int i = 2; i < input_values.Length; i++)
+            {
+                gremlins[i - 2] = ulong.Parse(input_values[i]); 
+            }
+            
+            for (long k = 1; k <= pow; k++)
+            {
+                //initialize the values for each check
+                lightOn = -1;
+                condition = 1;
+                coeff = 0;
+                
+                for(long j = 0; j < gremlins.Length; j++)
+                {
+                    //and between parts k , returns 1 only when both parameters '1' diff than 0
+                    if((k & parts[j]) != 0)
+                    {
+                       if((condition > minValue && swtich_amount / condition < gremlins[j]))
+                       {
+                           coeff = 0;
+                           break;
+                       }
+                        condition *= gremlins[j];
+                        //turn on or off the light
+                        lightOn *= -1;
+                        
+                        if(coeff == 0)
+                        {
+                            coeff = 1;
+                        }
+                        else
+                        {
+                            coeff = coeff * 2;
+                        }
+                    }   
+                }
+                
+                //counting lights which are on
+                if(coeff == 0)
+                {
+                    swtichesOn = swtichesOn + 0;
+                }
+                else
+                {
+                    swtichesOn = swtichesOn + coeff * (long)(swtich_amount / condition) * lightOn;
+                }
+            }    
+            
+            return swtichesOn;
+        }
+    }
+}
