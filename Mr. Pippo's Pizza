@@ -1,0 +1,76 @@
+using System;
+using System.Collections.Generic;
+using System.IO;
+
+namespace Mr_Pippo_Pizza
+{
+    class Solution
+    {
+        static long factorial_1 = 0, factorial_2 = 0, factorial_3 = 0;
+        static long input = 0;
+        
+        static void Main(String[] args) 
+        {
+            long answer = 0;
+            
+            for (int i = 0; i < 100; i++)
+            {
+                string stringInput = string.Empty;
+                stringInput = Console.ReadLine();
+                
+                if(stringInput != null)
+                {
+                    input = long.Parse(stringInput);
+                    if(input == 1)
+                    {
+                        Console.WriteLine("3");
+                    }
+                    else if(input != 0)
+                    {
+                      answer = MoreThanFive();
+                      Console.WriteLine(answer.ToString());
+                    }
+                }
+                
+                //else if (input == 5)
+                //{
+                   // Console.WriteLine("5");
+                //}
+              }
+         }
+        
+        public static long MoreThanFive()
+        {
+            long result = 0;
+            
+            for(long j = 5; j <= 2147483645; j++)
+            {
+                 factorial_1 = factorial_WhileLoop(2 * (j - 2));
+                 factorial_2 = factorial_WhileLoop(j + 1 - 2);
+                 factorial_3 = factorial_WhileLoop(j - 2);
+                if((factorial_2 * factorial_3) != 0)
+                {
+                    result = factorial_1 / (factorial_2 * factorial_3);
+                    if(result == input)
+                    {
+                        result = j;
+                        break;
+                    }
+                }
+            }
+            
+            return result;
+        }
+         
+        public static long factorial_WhileLoop(long number)
+        {
+            long result = 1;
+            while (number != 1)
+            {
+                result = result * number;
+                number = number - 1;
+            }
+            return result;
+        } 
+    }
+}
